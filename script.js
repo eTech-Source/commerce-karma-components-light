@@ -1,5 +1,5 @@
 // Must be defined first
-const commerceKarmaUrl = "http://localhost:3000";
+const commerceKarmaUrl = "https://commerce-karma.vercel.app";
 
 const injectSignIn = () => {
   const signInContainer = document.getElementById("CK-signin");
@@ -39,15 +39,15 @@ const createStars = (count) => {
   const emptyStars = 5 - fullStars - (halfStars > 0 ? 1 : 0);
 
   for (let i = 0; i < fullStars; i++) {
-    starsHtml += createStarElement("/assets/full-star.png", "Rating star");
+    starsHtml += createStarElement("https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/hjeyidjhfjsbf6fyjdxe.png", "Rating star");
   }
 
   if (halfStars > 0) {
-    starsHtml += createStarElement("/assets/half-star.png", "Rating half star");
+    starsHtml += createStarElement("https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/st9fx3guqowllvstwaia.png", "Rating half star");
   }
 
   for (let i = 0; i < emptyStars; i++) {
-    starsHtml += createStarElement("/assets/empty-star.png");
+    starsHtml += createStarElement("https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/wtgvnlz5ivekfzodyp4k.png");
   }
 
   return starsHtml;
@@ -105,13 +105,13 @@ const injectUser = async (link, filters) => {
     }
   }
 
+  const search = window.location.search.replace(/CK-/g, "")
+
   const data = await get(
     "",
     filters ? filters : {},
     `${commerceKarmaUrl}/api/user`
   );
-
-  console.log(data);
 
   if (data.error) {
     return false;
@@ -122,6 +122,14 @@ const injectUser = async (link, filters) => {
   const usersContainer = document.getElementById("CK-users");
 
   let injectHtml = "";
+
+  console.log (users)
+
+  if (users.length === 0) {
+    injectHtml += `
+      <button id="CK-add-user-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${search}">Add user</a></button>
+    `
+  }
 
   for (let i = 0; i < users.length; i++) {
     injectHtml += `        
@@ -176,7 +184,8 @@ const checkApiKey = async (apiKey) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const key = await checkApiKey(
-    "eyJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NUb2tlbiI6IisuSFxcQWp1fD5ffS9zOHB-emQrTWxCc0xwZXMzdiQ0Q3g8bTtCQFtle0w4XCI7ZjBTMm9GXCIvcitDRmdXXT5WVjgiLCJ1c2VyIjoiNjU3NGZiZjM0YzFjMWFjYjIyNjI0ZTRiIiwiaWF0IjoxNzAzNTQ0MTA3LCJpc3MiOiJlVGVjaCAoQ29tbWVyY2UgS2FybWEpIiwiYXVkIjoiYmlkcy5yZXNwb25zaWJpZC5jb20ifQ.sLdK07TXdshkTXDJdLQb-YRvx9ZZfE1EPbjbVdcejDY"
+   " eyJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NUb2tlbiI6Ijw1M2UuJiYwQl5-Oz9bbH58N017alN-VlJNOXdTYzVlcGxDc0Z4VU10YzBOL31iV1ErWyVRbXpkSyw8RUFjRiciLCJ1c2VyIjoiNjU3NGZiZjM0YzFjMWFjYjIyNjI0ZTRiIiwiaWF0IjoxNzA0MDc0NzIwLCJpc3MiOiJlVGVjaCAoQ29tbWVyY2UgS2FybWEpIiwiYXVkIjoiZmhnLmNvbSJ9.i5wfGqDXYJAv1L5XTQB9ugbaTMVX7ZAto8dPiI80eeo"
+
   );
   const users = await injectUser();
   if (!(key.response instanceof Error)) {

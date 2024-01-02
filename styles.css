@@ -22,7 +22,7 @@
   font-family: sans-serif;
 }
 
-#CK-signin-btn {
+#CK-signin-btn, #CK-add-user-btn {
   background-color: black;
   width: 8rem;
   height: 3rem;
@@ -32,12 +32,12 @@
   transition: all 250ms ease-in-out;
 }
 
-#CK-signin-btn:hover {
+#CK-signin-btn:hover, #CK-add-user-btn:hover {
   width: 9rem;
   background-color: gray;
 }
 
-#CK-signin-btn a {
+#CK-signin-btn a, #CK-add-user-btn a {
   color: white !important;
   text-decoration: none !important;
 }
