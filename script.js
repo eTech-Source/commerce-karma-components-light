@@ -100,7 +100,7 @@ const get = async (id, filters, url) => {
 
 // Inject data into correct divs
 
-const injectCustomer = async (link, filters) => {
+const injectCustomer = async (filters) => {
   const urlParams = new URLSearchParams(window.location.search);
 
   if (!filters && urlParams) {

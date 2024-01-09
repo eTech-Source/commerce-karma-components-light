@@ -1,7 +1,7 @@
 # Commerce Karma Components Light
 **Import note:** This package is not currently supported since Commerce Karma has not yet launched. However, it is nearing it's final form and can be used without error. Full support coming soon.
 
-Commerce Karma Components Light is a simple version based on Commerce Karma Components. It allows you to embed a pre-styled Commerce Karma customer rating into your application with a minimal HTML and JS support by all JS frameworks.
+Commerce Karma Components Light is a simple version based on Commerce Karma Components. It allows you to embed a pre-styled Commerce Karma customer rating into your application with minimal HTML and JS and is support by all JS frameworks.
 
 ## Installation
 Clone this project into your source directory for your frontend code. To do this run:
@@ -43,7 +43,7 @@ const customers = await injectCustomer();
 ```
 
 ## Choose your authentication solution
-The data provided in the components can only be accessed through an authenticated user. You can authenticate by: using the sign in component, users entering an API key, or you using your own API key (not recommended). 
+The data provided in the components can only be accessed through an authenticated user. You can authenticate by: using the sign in component, users entering an API key, or you using your own API key **(not recommended)**. 
 
 ### Use the sign in component
 This is by far the simplest option. 
@@ -91,8 +91,41 @@ This approach has lots of flexibility. There are only two requirements:
 
 If you need the api key to work across all instances of your application that your user is signed into a possible approach is to fetch the API key from your database.
 
+
 ### Use your own API key **(Not recommended)**
 Follow the above example. Using your own API key. This not recommended. It will be phased out with future updates.
 
 ## Deep dive on functions
-Additional information
+### injectCustomer
+Inject one or many customers into your application.
+
+#### Props
+- `filters: {name?: string, email?: string, city?: string}`: An optional  property allowing for custom filtering of customers.
+
+#### Built in behavior
+- When the query string is appended to the url the display customer(s). Query params include: `CK-name, CK-email, CK-city`.
+
+### checkAuth
+Embed a sign in interface to your application.
+
+#### Props
+- `customers`: A required property for using the sign in popup.
+
+#### Built in behavior
+- Cookie `CK-jwt` saved after successful sign in.
+
+#### checkApiKey
+A helper function to check the validity of an API key.
+
+#### Props
+- `apiKey` the API key to verify.
+
+#### Built in behavior
+None.
+
+#### Return value
+- `apiKey?` If the API key is valid then the same passed API key will be returned back.
+- `response?`If the API key is valid then a response object will be returned.
+- `error?` If any errors take place during the validation process (including an invalid key) then an `Error` object will be returned.
+
+Excited to see how you use these!
