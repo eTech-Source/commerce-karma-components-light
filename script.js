@@ -39,15 +39,23 @@ const createStars = (count) => {
   const emptyStars = 5 - fullStars - (halfStars > 0 ? 1 : 0);
 
   for (let i = 0; i < fullStars; i++) {
-    starsHtml += createStarElement("https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/hjeyidjhfjsbf6fyjdxe.png", "Rating star");
+    starsHtml += createStarElement(
+      "https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/hjeyidjhfjsbf6fyjdxe.png",
+      "Rating star"
+    );
   }
 
   if (halfStars > 0) {
-    starsHtml += createStarElement("https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/st9fx3guqowllvstwaia.png", "Rating half star");
+    starsHtml += createStarElement(
+      "https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/st9fx3guqowllvstwaia.png",
+      "Rating half star"
+    );
   }
 
   for (let i = 0; i < emptyStars; i++) {
-    starsHtml += createStarElement("https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/wtgvnlz5ivekfzodyp4k.png");
+    starsHtml += createStarElement(
+      "https://res.cloudinary.com/dpiyvkmo8/image/upload/v1704152834/commerce-karma-images/wtgvnlz5ivekfzodyp4k.png"
+    );
   }
 
   return starsHtml;
@@ -74,7 +82,7 @@ const get = async (id, filters, url) => {
   // Required to complete any requests other than OPTIONS
 
   const authorization = readCookie("CK-jwt");
-  const apiKey = readCookie("CK-api-key")
+  const apiKey = readCookie("CK-api-key");
 
   const rawResponse = await fetch(url, {
     headers: {
@@ -92,7 +100,7 @@ const get = async (id, filters, url) => {
 
 // Inject data into correct divs
 
-const injectUser = async (link, filters) => {
+const injectCustomer = async (link, filters) => {
   const urlParams = new URLSearchParams(window.location.search);
 
   if (!filters && urlParams) {
@@ -105,7 +113,7 @@ const injectUser = async (link, filters) => {
     }
   }
 
-  const search = window.location.search.replace(/CK-/g, "")
+  const search = window.location.search.replace(/CK-/g, "");
 
   const data = await get(
     "",
@@ -117,39 +125,37 @@ const injectUser = async (link, filters) => {
     return false;
   }
 
-  const users = data.user;
+  const customers = data.user;
 
-  const usersContainer = document.getElementById("CK-users");
+  const customersContainer = document.getElementById("CK-customers");
 
   let injectHtml = "";
 
-  console.log (users)
-
-  if (users.length === 0) {
+  if (customers.length === 0) {
     injectHtml += `
-      <button id="CK-add-user-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${search}">Add user</a></button>
-    `
+      <button id="CK-add-customer-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${search}">Add customer</a></button>
+    `;
   }
 
-  for (let i = 0; i < users.length; i++) {
+  for (let i = 0; i < customers.length; i++) {
     injectHtml += `        
-          <div class="CK-user">
-             <a href="" class="CK-user-link">
-                <h1 class="CK-user-name">${
-                  users[i].name
+          <div class="CK-customer">
+             <a href="" class="CK-customer-link">
+                <h1 class="CK-customer-name">${
+                  customers[i].name
                 } <b class="CK-star-number">(${
-      users[i].customerRating
+      customers[i].customerRating
     })</b></h1>
-                <div id="CK-user-stars-${
-                  users[i]._id
+                <div id="CK-customer-stars-${
+                  customers[i]._id
                 }" class="CK-stars">${createStars(
-      users[i].customerRating
+      customers[i].customerRating
     )}</div>
               </a>
           </div>`;
   }
 
-  usersContainer.innerHTML = injectHtml;
+  customersContainer.innerHTML = injectHtml;
 };
 
 // Authentication: DO NOT MODIFY
@@ -161,8 +167,8 @@ if (jwt) {
   document.cookie = `CK-jwt=${jwt[1]}; max-age=2592000;`;
 }
 
-const checkAuth = async (users, reviews) => {
-  if (users == false || reviews == false) {
+const checkAuth = async (customers) => {
+  if (customers == false) {
     injectSignIn();
   }
 };
@@ -176,22 +182,11 @@ const checkApiKey = async (apiKey) => {
     if (rawResponse.status >= 400) {
       throw new Error(response.message);
     }
-    return {apiKey, response};
+    return { apiKey, response };
   } catch (error) {
     return error;
   }
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const key = await checkApiKey(
-   " eyJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NUb2tlbiI6Ijw1M2UuJiYwQl5-Oz9bbH58N017alN-VlJNOXdTYzVlcGxDc0Z4VU10YzBOL31iV1ErWyVRbXpkSyw8RUFjRiciLCJ1c2VyIjoiNjU3NGZiZjM0YzFjMWFjYjIyNjI0ZTRiIiwiaWF0IjoxNzA0MDc0NzIwLCJpc3MiOiJlVGVjaCAoQ29tbWVyY2UgS2FybWEpIiwiYXVkIjoiZmhnLmNvbSJ9.i5wfGqDXYJAv1L5XTQB9ugbaTMVX7ZAto8dPiI80eeo"
-
-  );
-  const users = await injectUser();
-  if (!(key.response instanceof Error)) {
-    document.cookie = `CK-api-key=${key.apiKey}; SameSite=None; Secure=true; Expires= 1 Jan 3000 00:00:01 GMT`
-  }
-});
-
 // Exports
-export { injectSignIn, checkAuth, injectUser };
+export { injectSignIn, checkAuth, injectCustomer, checkApiKey };
