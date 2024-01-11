@@ -140,7 +140,7 @@ const injectCustomer = async (filters) => {
   for (let i = 0; i < customers.length; i++) {
     injectHtml += `        
           <div class="CK-customer">
-             <a href="" class="CK-customer-link">
+             <a href="${commerceKarmaUrl}/app/reviews/customer/${customers[i].userId}" class="CK-customer-link">
                 <h1 class="CK-customer-name">${
                   customers[i].name
                 } <b class="CK-star-number">(${
