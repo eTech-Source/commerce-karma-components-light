@@ -109,7 +109,11 @@ const injectCustomer = async (filters) => {
       params.forEach((param) => {
         paramsArray.push(param.replace("CK-", ""));
       });
-      filters = arrayToKeyValueObject(paramsArray);
+      const urlFilters = arrayToKeyValueObject(paramsArray);
+
+      if (urlFilters.email) {
+        filters = {email: urlFilters.email}
+      }
     }
   }
 
