@@ -102,6 +102,11 @@ const get = async (id, filters, url) => {
 
 const injectCustomer = async (filters) => {
   const urlParams = new URLSearchParams(window.location.search);
+  let exactFilters;
+
+  if (filters && filters.email) {
+    exactFilters = { email: filters.email };
+  }
 
   if (!filters && urlParams) {
     for (let params of urlParams) {
@@ -112,16 +117,20 @@ const injectCustomer = async (filters) => {
       const urlFilters = arrayToKeyValueObject(paramsArray);
 
       if (urlFilters.email) {
-        filters = {email: urlFilters.email}
+        exactFilters = { email: urlFilters.email };
       }
     }
   }
 
   const search = window.location.search.replace(/CK-/g, "");
 
+  if (!exactFilters) {
+    return;
+  }
+
   const data = await get(
     "",
-    filters ? filters : {},
+    exactFilters ? exactFilters : {},
     `${commerceKarmaUrl}/api/user`
   );
 
@@ -137,14 +146,16 @@ const injectCustomer = async (filters) => {
 
   if (customers.length === 0) {
     injectHtml += `
-      <button id="CK-add-customer-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${search}">Add customer</a></button>
+      <button id="CK-add-customer-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${search}" target="blank">Add customer</a></button>
     `;
   }
 
   for (let i = 0; i < customers.length; i++) {
     injectHtml += `        
           <div class="CK-customer">
-             <a href="${commerceKarmaUrl}/app/reviews/customer/${customers[i].userId}" class="CK-customer-link">
+             <a href="${commerceKarmaUrl}/app/reviews/customer/${
+      customers[i].userId
+    }" class="CK-customer-link" target="blank">
                 <h1 class="CK-customer-name">${
                   customers[i].name
                 } <b class="CK-star-number">(${
