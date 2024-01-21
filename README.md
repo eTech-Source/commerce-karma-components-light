@@ -96,15 +96,6 @@ If you need the api key to work across all instances of your application that yo
 Follow the above example. Using your own API key. This not recommended. It will be phased out with future updates.
 
 ## Deep dive on functions
-### injectCustomer
-Inject one or many customers into your application.
-
-#### Props
-- `filters: {name?: string, email?: string, city?: string}`: An optional  property allowing for custom filtering of customers.
-
-#### Built in behavior
-- When the query string is appended to the url the display customer(s). Query params include: `CK-name, CK-email, CK-city`.
-
 ### checkAuth
 Embed a sign in interface to your application.
 
@@ -127,5 +118,33 @@ None.
 - `apiKey?` If the API key is valid then the same passed API key will be returned back.
 - `response?`If the API key is valid then a response object will be returned.
 - `error?` If any errors take place during the validation process (including an invalid key) then an `Error` object will be returned.
+
+
+## Deep dive on components
+### injectCustomer
+Inject one or many customers into your application.
+
+#### Props
+- `filters: {name?: string, email?: string, city?: string}`: An optional  property allowing for custom filtering of customers.
+- The `email` field is the only exact matching field, the others do not filter customers.
+
+#### Built in behavior
+- When the query string is appended to the url the display customer(s). Query params include: `CK-name, CK-email, CK-city`.
+- The `CK-email` field is the only exact matching field, the others do not filter customers.
+- If `CK-email` or the `email` filters is not specified **nothing** will be returned.
+- If all filters or query params are specified and the customer still doesn't exist the customer will automatically be added to Commerce Karma.
+
+### injectReviews
+Render a customer with a list of up to three of their most recent reviews. 
+
+#### Props
+- `filters: {name?: string, email?: string, city?: string}`: An optional  property allowing for custom filtering of customers.
+- The `email` field is the only exact matching field, the others do not filter customers.
+
+#### Built in behavior
+- When the query string is appended to the url the display customer(s). Query params include: `CK-name, CK-email, CK-city`.
+- The `CK-email` field is the only exact matching field, the others do not filter customers.
+- If `CK-email` or the `email` filters is not specified **nothing** will be returned.
+- Change card to only show a write review button.
 
 Excited to see how you use these!

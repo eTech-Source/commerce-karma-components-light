@@ -1,12 +1,23 @@
 .CK-customer-link {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: black;
-  font-family: sans-serif;
+  flex-direction: column;
+  color: white;
   text-decoration: none;
   font-size: 0.5rem;
-  gap: 1rem;
+}
+
+.CK-customer-name {
+  font-size: 1.5rem;
+}
+
+.CK-info {
+  display: flex;
+  align-items: center;
+  font-size: 0.625rem;
+}
+
+.CK-info i {
+  margin-left: 0.5rem;
 }
 
 .CK-stars img {
@@ -14,33 +25,84 @@
   height: 1rem;
 }
 
+.CK-stars {
+  display: flex;
+  gap: 0.1rem;
+}
+
 #CK-signin {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  font-family: sans-serif;
 }
 
 #CK-signin-btn,
-#CK-add-customer-btn {
-  background-color: black;
-  width: 8rem;
-  height: 3rem;
-  border: white 1px solid;
-  border-radius: 0.5rem;
+#CK-add-customer-btn,
+.CK-profile-btn {
+  background-color: #0073FF;
+  width: 176px;
+  height: 35px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 250ms ease-in-out;
+  color: white;
+  font-size: 0.75rem;
+  margin: 1rem;
 }
 
-#CK-signin-btn:hover,
-#CK-add-customer-btn:hover {
-  width: 9rem;
-  background-color: gray;
+#CK-profile {
+  display: flex;
+}
+
+#CK-profile-pic {
+  background-color: #0073FF;
+  width: 69px;
+  height: 69px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  align-self: center;
+}
+
+#CK-customer-data {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+#CK-customer-review-stats {
+  display: flex;
+  align-items: center;
+}
+
+#CK-review-number {
+  margin-right: 1rem;
+}
+
+#CK-profile-info {
+  display: flex;
+  flex-direction: column;
 }
 
 #CK-signin-btn a,
 #CK-add-customer-btn a {
   color: white !important;
   text-decoration: none !important;
+}
+
+.CK-name {
+  margin-bottom: -0.5rem;
+}
+
+.CK-divider {
+  height: 1px;
+  background-color: #E0E0E0;
+  border: none;
 }
