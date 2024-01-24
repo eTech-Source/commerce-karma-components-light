@@ -134,6 +134,20 @@ Inject one or many customers into your application.
 - If `CK-email` or the `email` filters is not specified **nothing** will be returned.
 - If all filters or query params are specified and the customer still doesn't exist the customer will automatically be added to Commerce Karma.
 
+### injectCustomerMini
+Inject one customer rating into your application in to a small a widget.
+
+#### Props
+- `filters: {name?: string, email?: string, city?: string}`: An optional  property allowing for custom filtering of customers.
+- The `email` field is the only exact matching field, the others do not filter customers.
+
+#### Built in behavior
+- When the query string is appended to the url the display customer(s). Query params include: `CK-name, CK-email, CK-city`.
+- The `CK-email` field is the only exact matching field, the others do not filter customers.
+- If `CK-email` or the `email` filters is not specified **nothing** will be returned.
+
+**Note:** that the customer will not automatically be added with this component. 
+
 ### injectReviews
 Render a customer with a list of up to three of their most recent reviews. 
 
@@ -146,5 +160,7 @@ Render a customer with a list of up to three of their most recent reviews.
 - The `CK-email` field is the only exact matching field, the others do not filter customers.
 - If `CK-email` or the `email` filters is not specified **nothing** will be returned.
 - Change card to only show a write review button.
+
+**Note:** that the customer will not automatically be added with this component. 
 
 Excited to see how you use these!
