@@ -1,5 +1,5 @@
 // Must be defined first
-const commerceKarmaUrl = "https://commerce-karma.vercel.app";
+const commerceKarmaUrl = "https://www.commerce-karma.com";
 
 const injectSignIn = () => {
   const signInContainer = document.getElementById("CK-signin");
@@ -140,8 +140,11 @@ const injectCustomer = async (filters) => {
       }
     }
   }
-
-  const search = window.location.search.replace(/CK-/g, "");
+  const searchParams =
+    window.location.search.replace(/CK-/g, "") ||
+    `?name=${filters.name || ""}&email=${filters.email || ""}&city=${
+      filters.city || ""
+    }`;
 
   if (!exactFilters.email) {
     return;
@@ -173,7 +176,7 @@ const injectCustomer = async (filters) => {
     await post(filters, `${commerceKarmaUrl}/api/user`);
   } else if (customers.length === 0) {
     injectHtml += `
-    <button id="CK-add-customer-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${search}" target="blank">Add customer</a></button>
+    <button id="CK-add-customer-btn"><a href="${commerceKarmaUrl}/app/reviews/newCustomer${searchParams}" target="blank">Add customer</a></button>
   `;
   }
 
@@ -208,62 +211,62 @@ const injectCustomer = async (filters) => {
   customersContainer.innerHTML = injectHtml;
 };
 
-
 const injectCustomerMini = async (filters) => {
   const urlParams = new URLSearchParams(window.location.search);
   let exactFilters;
 
   if (filters && filters.email) {
-      exactFilters = {
-          email: filters.email,
-      };
+    exactFilters = {
+      email: filters.email,
+    };
   }
 
   if (!filters && urlParams) {
-      let paramsArray = [];
-      let urlFilters = {};
+    let paramsArray = [];
+    let urlFilters = {};
 
-      for (let params of urlParams) {
-          params.forEach((param) => {
-              paramsArray.push(param.replace("CK-", ""));
-          });
-          urlFilters = arrayToKeyValueObject(paramsArray);
+    for (let params of urlParams) {
+      params.forEach((param) => {
+        paramsArray.push(param.replace("CK-", ""));
+      });
+      urlFilters = arrayToKeyValueObject(paramsArray);
 
-          if (urlFilters.email || urlFilters.name || urlFilters.city) {
-              filters = {
-                  name: urlFilters.name,
-                  email: urlFilters.email,
-                  city: urlFilters.city,
-              };
-              exactFilters = { email: urlFilters.email };
-          }
+      if (urlFilters.email || urlFilters.name || urlFilters.city) {
+        filters = {
+          name: urlFilters.name,
+          email: urlFilters.email,
+          city: urlFilters.city,
+        };
+        exactFilters = { email: urlFilters.email };
       }
+    }
   }
 
   if (!exactFilters || !exactFilters.email) {
-      return;
+    return;
   }
 
   const emails = filters.email.split(",");
-  const data = await get(
-      "",
-      { email: emails },
-      `${commerceKarmaUrl}/api/user`
-  );
+  const data = await get("", { email: emails }, `${commerceKarmaUrl}/api/user`);
 
   if (data.error) {
-      return false;
+    return false;
   }
 
+  const searchParams =
+    window.location.search.replace(/CK-/g, "") ||
+    `?name=${filters.name || ""}&email=${filters.email || ""}&city=${
+      filters.city || ""
+    }`;
+
   const customers = data.user;
-  const customersContainer = document.getElementsByClassName(
-      "CK-customers-mini"
-  );
+  const customersContainer =
+    document.getElementsByClassName("CK-customers-mini");
 
   if (customers.length === 0) {
-      injectHtml.push(`
+    injectHtml.push(`
           <div class="CK-customer-mini">
-              <a href="${commerceKarmaUrl}/app/reviews/newCustomer" class="CK-customer-link-mini" target="_blank">
+              <a href="${commerceKarmaUrl}/app/reviews/newCustomer${searchParams}" class="CK-customer-link-mini" target="_blank">
                   <span class="CK-rating-text">Rating:</span>
                   <div class="CK-stars">${createStars(0)}</div>
                   <i>No reviews yet</i>
@@ -273,30 +276,36 @@ const injectCustomerMini = async (filters) => {
                       </svg>
                   </div>
               </a>
-          </div>`
-      );
+          </div>`);
   }
 
   for (let i = 0; i < customers.length; i++) {
-      const { reviews } = await get(
-          "",
-          { recipient: customers[i]._id },
-          `${commerceKarmaUrl}/api/reviews/add`
-      );
+    const { reviews } = await get(
+      "",
+      { recipient: customers[i]._id },
+      `${commerceKarmaUrl}/api/reviews/add`
+    );
 
-      let injectHtml = `
+    let injectHtml = `
           <div class="CK-customer-mini">
-              <a href="${commerceKarmaUrl}/app/reviews/customer/${customers[i].userId}" class="CK-customer-link-mini" target="_blank">
+              <a href="${commerceKarmaUrl}/app/reviews/customer/${
+      customers[i].userId
+    }" class="CK-customer-link-mini" target="_blank">
                   <span class="CK-rating-text">Rating:</span>
-                  <div id="CK-customer-stars-${customers[i]._id}" class="CK-stars">${createStars(customers[i].customerRating)}</div>
-                  <i>Based on ${reviews.length} ${reviews.length === 1 ? "review" : "reviews"}</i>
+                  <div id="CK-customer-stars-${
+                    customers[i]._id
+                  }" class="CK-stars">${createStars(
+      customers[i].customerRating
+    )}</div>
+                  <i>Based on ${reviews.length} ${
+      reviews.length === 1 ? "review" : "reviews"
+    }</i>
               </a>
           </div>`;
 
-      customersContainer[i].innerHTML += injectHtml[i];
+    customersContainer[i].innerHTML += injectHtml[i];
   }
 };
-
 
 const injectReviews = async (filters) => {
   let exactFilters;
@@ -331,7 +340,11 @@ const injectReviews = async (filters) => {
     };
   }
 
-  const search = window.location.search.replace(/CK-/g, "");
+  const searchParams =
+    window.location.search.replace(/CK-/g, "") ||
+    `?name=${filters.name || ""}&email=${filters.email || ""}&city=${
+      filters.city || ""
+    }`;
 
   if (!exactFilters.email) {
     return;
@@ -361,7 +374,7 @@ const injectReviews = async (filters) => {
          </div>
         </div>
       </div>
-      <a href="${commerceKarmaUrl}/app/reviews/newCustomer" target="blank">
+      <a href="${commerceKarmaUrl}/app/reviews/newCustomer${searchParams}" target="blank">
           <button class="CK-profile-btn" style="width: 300px;">Write A Review</button>
         </a>
   </div>
@@ -468,20 +481,6 @@ const checkApiKey = async (apiKey) => {
     return error;
   }
 };
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const key = await checkApiKey(
-    "eyJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3NUb2tlbiI6IiwvTmlqRCxqNWVrUDI8flgwNGtIXy4uTHZOQSwzP1RAQ0BSYmt1MycpT0VgJW98RD80ViFZNzZZSS0yeDNJM2AiLCJ1c2VyIjoiNjU3NGZiZjM0YzFjMWFjYjIyNjI0ZTRiIiwiaWF0IjoxNzA2MTQ5MTgxLCJpc3MiOiJlVGVjaCAoQ29tbWVyY2UgS2FybWEpIiwiYXVkIjoicG9zdG1hbiJ9.xZJEc4rZ3a1Wi8Vv0PDyIUIB2Hf8-qpcKuAHo6HFI2c"
-  );
-
-  if (!(key.response instanceof Error)) {
-    document.cookie = `CK-api-key=${key.apiKey}; SameSite=None; Secure=true; Expires= 1 Jan 3000 00:00:01 GMT`;
-  }
-
-  const customers = await injectCustomer();
-  const review = await injectReviews();
-  const miniCustomer = await injectCustomerMini();
-});
 
 // Exports
 export {
